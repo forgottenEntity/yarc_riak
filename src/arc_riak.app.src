@@ -1,0 +1,19 @@
+%%%-------------------------------------------------------------------
+%%% @author ForgottenEntity
+%%% @doc
+%%%
+%%% @end
+%%% Created : 29. Jan 2019 00:25
+%%%-------------------------------------------------------------------
+{application, arc, [
+  {description, "ARC Riak Library"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications, [
+    kernel,
+    stdlib,
+    lager
+  ]},
+  {mod, {arc_riak, []}},
+  {env, []}
+]}.

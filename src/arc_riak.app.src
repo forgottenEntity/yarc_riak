@@ -12,8 +12,9 @@
   {applications, [
     kernel,
     stdlib,
-    lager
+    lager,
+    poolboy
   ]},
-  {mod, {arc_riak, []}},
+  {modules, []},
   {env, []}
 ]}.

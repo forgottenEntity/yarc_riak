@@ -1,13 +1,12 @@
 %%%-------------------------------------------------------------------
-%%% @author chris
-%%% @copyright (C) 2019, <COMPANY>
+%%% @author forgottenEntity
 %%% @doc
 %%%
 %%% @end
 %%% Created : 29. Jan 2019 00:32
 %%%-------------------------------------------------------------------
--module(arc_riak_connection).
--author("chris").
+-module(yarc_riak_connection).
+-author("forgottenEntity").
 
 -behaviour(gen_server).
 -behaviour(poolboy_worker).
@@ -19,7 +18,8 @@
 -export([get/4,
          get_meta/4,
          put/3,
-         put/4
+         put/4,
+         delete/4
         ]).
 
 -export([start_link/1]).
@@ -44,6 +44,9 @@ put(Connection, Timeout, RiakObj, return_body) ->
   gen_server:call(Connection, {put, {Timeout, RiakObj, return_body}});
 put(Connection, Timeout, RiakObj, return_head) ->
   gen_server:call(Connection, {put, {Timeout, RiakObj, return_head}}).
+
+delete(Connection, Bucket, Key, Timeout) ->
+  gen_server:call(Connection, {delete, {Bucket, Key, Timeout}}).
 
 
 
@@ -71,17 +74,25 @@ init(Args) ->
 handle_call({get, {Bucket, Key, Timeout}}, _From, State = #state{riak_process=RiakProcess}) ->
   Result = riakc_pb_socket:get(RiakProcess, Bucket, Key, Timeout),
   {reply, Result, State};
+
 handle_call({get_meta, {Bucket, Key, Timeout}}, _From, State = #state{riak_process=RiakProcess}) ->
   Result = riakc_pb_socket:get(RiakProcess, Bucket, Key, [head], Timeout),
   {reply, Result, State};
+
 handle_call({put, {Timeout, RiakObj}}, _From, State = #state{riak_process=RiakProcess}) ->
   Result = riakc_pb_socket:put(RiakProcess, RiakObj, Timeout),
   {reply, Result, State};
+
 handle_call({put, {Timeout, RiakObj, return_body}}, _From, State = #state{riak_process=RiakProcess}) ->
   Result = riakc_pb_socket:put(RiakProcess, RiakObj, [return_body], Timeout),
   {reply, Result, State};
+
 handle_call({put, {Timeout, RiakObj, return_head}}, _From, State = #state{riak_process=RiakProcess}) ->
   Result = riakc_pb_socket:put(RiakProcess, RiakObj, [return_head], Timeout),
+  {reply, Result, State};
+
+handle_call({delete, {Bucket, Key, Timeout}}, _From, State = #state{riak_process=RiakProcess}) ->
+  Result = riakc_pb_socket:delete(RiakProcess, Bucket, Key, Timeout),
   {reply, Result, State}.
 
 handle_cast(_Msg, State) ->

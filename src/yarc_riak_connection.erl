@@ -31,6 +31,7 @@
 %% API Functions %%
 %% **************************************************************************** %%
 
+-spec(get(Connection :: pid(), Bucket :: binary(), Key :: binary(), Timeout :: integer) -> term()).
 get(Connection, Bucket, Key, Timeout) ->
   gen_server:call(Connection, {get, {Bucket, Key, Timeout}}).
 

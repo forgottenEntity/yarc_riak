@@ -45,7 +45,7 @@ init(_Args) ->
     WorkerArgs = [{riak_pb_ip, PB_IP}, {riak_pb_port, PB_Port}, {riak_pb_options, PB_Options}],
 
     PoolArgs = [{name, {local, Name}},
-      {worker_module, arc_riak_connection}] ++ SizeArgs,
+      {worker_module, yarc_riak_connection}] ++ SizeArgs,
     poolboy:child_spec(Name, PoolArgs, WorkerArgs)
                         end, Config),
 
